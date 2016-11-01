@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- * Copyright (c) 2013, 2014, 2015 QPark Consulting S.a r.l. * * This 
+		program and the accompanying mnaterials are made available under the * terms 
+		of the Eclipse Public License v1.0. * The Eclipse Public License is available 
+		at * http://www.eclipse.org/legal/epl-v10.html. -->
+
+	<parent>
+		<groupId>com.qpark.survey</groupId>
+		<artifactId>survey-base</artifactId>
+		<version>1.0.0-SNAPSHOT</version><!--qpark-survey-version -->
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>lime-adapter</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.qpark.survey</groupId>
+			<artifactId>survey-domain</artifactId>
+			<version>1.0.0-SNAPSHOT</version><!--qpark-survey-version -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

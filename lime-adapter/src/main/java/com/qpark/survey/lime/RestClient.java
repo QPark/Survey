@@ -1,4 +1,4 @@
-package com.qpark.lime.survey;
+package com.qpark.survey.lime;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,14 +18,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.qpark.lime.survey.model.mapper.Mapper;
-import com.qpark.lime.survey.model.v25.ExportResponsesListEntryType;
-import com.qpark.lime.survey.model.v25.ExportResponsesResponseType;
-import com.qpark.lime.survey.model.v25.GetSessionKeyResponseType;
-import com.qpark.lime.survey.model.v25.ListQuestionsResponseType;
-import com.qpark.lime.survey.model.v25.ListSurveysResponseType;
-import com.qpark.lime.survey.model.v25.PropertyType;
-import com.qpark.lime.survey.model.v25.RequestType;
+import com.qpark.survey.lime.model.mapper.Mapper;
+import com.qpark.survey.lime.model.v25.ExportResponsesListEntryType;
+import com.qpark.survey.lime.model.v25.ExportResponsesResponseType;
+import com.qpark.survey.lime.model.v25.GetSessionKeyResponseType;
+import com.qpark.survey.lime.model.v25.ListQuestionsResponseType;
+import com.qpark.survey.lime.model.v25.ListSurveysResponseType;
+import com.qpark.survey.lime.model.v25.PropertyType;
+import com.qpark.survey.lime.model.v25.RequestType;
 
 /**
  * Client calling the lime survey rest service.
@@ -36,19 +38,20 @@ public class RestClient {
 	/** Content-type HTTP header. */
 	private final HttpHeaders headers;
 	/** The spring {@link RestTemplate}. */
-	private final RestTemplate restTemplate;
+	@Autowired
+	@Qualifier("limeRestTemplate")
+	private RestTemplate restTemplate;
+	/** The {@link Mapper}. */
+	@Autowired
+	private Mapper mapper;
 
 	/**
 	 * The REST service client implementation.
 	 *
-	 * @param restTemplate
-	 *            the {@link RestTemplate}.
 	 * @param endPointUrl
 	 *            the end point URL to call.
 	 */
-	public RestClient(final RestTemplate restTemplate,
-			final String endPointUrl) {
-		this.restTemplate = restTemplate;
+	public RestClient(final String endPointUrl) {
 		this.endPointUrl = endPointUrl;
 		this.headers = new HttpHeaders();
 		this.headers.setContentType(MediaType.APPLICATION_JSON);
@@ -57,7 +60,7 @@ public class RestClient {
 	private String executeRequst(final RequestType request)
 			throws JsonProcessingException {
 		final HttpEntity<String> entity = new HttpEntity<String>(
-				Mapper.getInstance().writeValueAsString(request), this.headers);
+				this.mapper.writeValueAsString(request), this.headers);
 		final String value = this.restTemplate.postForObject(this.endPointUrl,
 				entity, String.class);
 		return value;
@@ -96,9 +99,8 @@ public class RestClient {
 					new String(password));
 			final String response = this.executeRequst(request);
 			if (Objects.nonNull(response)) {
-				final GetSessionKeyResponseType session = Mapper.getInstance()
-						.readValue(response.getBytes(),
-								GetSessionKeyResponseType.class);
+				final GetSessionKeyResponseType session = this.mapper.readValue(
+						response.getBytes(), GetSessionKeyResponseType.class);
 				if (Objects.nonNull(session.getResult())) {
 					value = Optional.of(new LimeSurveySession());
 					value.ifPresent(s -> {
@@ -133,7 +135,7 @@ public class RestClient {
 					session.getSessionKey(), session.getUserName());
 			final String response = this.executeRequst(request);
 			if (Objects.nonNull(response)) {
-				value = Optional.ofNullable(Mapper.getInstance().readValue(
+				value = Optional.ofNullable(this.mapper.readValue(
 						response.getBytes(), ListSurveysResponseType.class));
 			}
 		}
@@ -167,7 +169,7 @@ public class RestClient {
 					propertyNames.toArray(new String[propertyNames.size()]));
 			final String response = this.executeRequst(request);
 			if (Objects.nonNull(response)) {
-				// value = Optional.ofNullable(Mapper.getInstance().readValue(
+				// value = Optional.ofNullable(mapper.readValue(
 				// response.getBytes(), ListSurveysResponseType.class));
 			}
 		}
@@ -197,7 +199,7 @@ public class RestClient {
 					session.getSessionKey(), surveyId);
 			final String response = this.executeRequst(request);
 			if (Objects.nonNull(response)) {
-				value = Optional.ofNullable(Mapper.getInstance().readValue(
+				value = Optional.ofNullable(this.mapper.readValue(
 						response.getBytes(), ListQuestionsResponseType.class));
 			}
 		}
@@ -231,14 +233,14 @@ public class RestClient {
 					language.orElse("en"));
 			final String response = this.executeRequst(request);
 			if (Objects.nonNull(response)) {
-				value = Optional.ofNullable(
-						Mapper.getInstance().readValue(response.getBytes(),
+				value = Optional
+						.ofNullable(this.mapper.readValue(response.getBytes(),
 								ExportResponsesResponseType.class));
 				value.ifPresent(rr -> {
 					if (Objects.nonNull(rr.getResult())) {
 						try {
-							final Map<String, Object> answer = Mapper
-									.getInstance().readValue(rr.getResult(),
+							final Map<String, Object> answer = this.mapper
+									.readValue(rr.getResult(),
 											new TypeReference<Map<String, Object>>() {
 											});
 							@SuppressWarnings({ "unchecked" })

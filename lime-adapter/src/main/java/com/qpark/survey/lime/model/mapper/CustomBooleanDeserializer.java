@@ -1,4 +1,4 @@
-package com.qpark.lime.survey.model.mapper;
+package com.qpark.survey.lime.model.mapper;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
  *
  * @author bhausen
  */
-class CustomBooleanDeserializer extends JsonDeserializer<Boolean> {
+public class CustomBooleanDeserializer extends JsonDeserializer<Boolean> {
 	/**
 	 * @see com.fasterxml.jackson.databind.JsonDeserializer#deserialize(com.fasterxml.jackson.core.JsonParser,
 	 *      com.fasterxml.jackson.databind.DeserializationContext)

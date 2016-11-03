@@ -1,16 +1,14 @@
-package com.qpark.lime.survey.model.mapper;
+package com.qpark.survey.lime.model.mapper;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
 /**
  * Maps lime responses to model objects.
@@ -18,42 +16,15 @@ import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
  * @author bhausen
  */
 public class Mapper {
-	/** The instance of the Mapper. */
-	private static Mapper instance = new Mapper();
-
-	/**
-	 * @return the {@link Mapper} instance.
-	 */
-	public static Mapper getInstance() {
-		return instance;
-	}
-
 	/** The {@link ObjectMapper}. */
-	private final ObjectMapper mapper;
+	@Autowired
+	private ObjectMapper mapper;
 
 	/**
 	 * @return the mapper
 	 */
 	public ObjectMapper getMapper() {
 		return this.mapper;
-	}
-
-	/** Creates the {@link Mapper} instance. */
-	public Mapper() {
-		this.mapper = new ObjectMapper();
-		this.mapper.configure(
-				DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,
-				true);
-		this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-				false);
-
-		final SimpleModule module = new SimpleModule();
-		module.addDeserializer(boolean.class, new CustomBooleanDeserializer());
-		this.mapper.registerModule(module);
-		this.mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-		this.mapper.setAnnotationIntrospector(
-				new JaxbAnnotationIntrospector(this.mapper.getTypeFactory()));
-
 	}
 
 	/**

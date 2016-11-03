@@ -8,7 +8,7 @@
 	<annotation>
 		<appinfo>
 			<jaxb:schemaBindings>
-				<jaxb:package name="com.qpark.lime.survey.model.v25" />
+				<jaxb:package name="com.qpark.survey.lime.model.v25" />
 			</jaxb:schemaBindings>
 		</appinfo>
 		<documentation></documentation>

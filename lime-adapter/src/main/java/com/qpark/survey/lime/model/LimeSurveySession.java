@@ -1,4 +1,4 @@
-package com.qpark.survey.lime;
+package com.qpark.survey.lime.model;
 
 /**
  * @author bhausen

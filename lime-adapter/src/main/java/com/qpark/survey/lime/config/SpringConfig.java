@@ -2,7 +2,6 @@ package com.qpark.survey.lime.config;
 
 import java.text.SimpleDateFormat;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -22,9 +21,6 @@ import com.qpark.survey.lime.model.mapper.Mapper;
  */
 @Configuration
 public class SpringConfig {
-	@Value("${com.qpark.survey.lime.endpoint.url}")
-	private String endPointUrl;
-
 	/**
 	 * @return the {@link ObjectMapper} of the lime adapter.
 	 */
@@ -68,7 +64,7 @@ public class SpringConfig {
 	 */
 	@Bean(name = "limeRestClient")
 	public RestClient limeRestClient() {
-		final RestClient bean = new RestClient(this.endPointUrl);
+		final RestClient bean = new RestClient();
 		return bean;
 	}
 }

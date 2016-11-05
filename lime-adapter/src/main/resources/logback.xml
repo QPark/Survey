@@ -14,6 +14,7 @@
 			<pattern>%d{yyyyMMdd-HHmmss.SSS}[%contextName][%-5level][%c] %msg%n%ex</pattern>
 		</encoder>
 	</appender>
+	<logger name="org.springframework" level="TRACE"/>
 	<logger name="org.springframework.web.client.RestTemplate" level="INFO"/>
 	<logger name="sun.net.www.protocol.http.HttpURLConnection" level="INFO"/>
 	<root>

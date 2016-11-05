@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.qpark.survey.lime.model.LimeSurveySession;
 import com.qpark.survey.lime.model.mapper.Mapper;
 import com.qpark.survey.lime.model.v25.ExportResponsesListEntryType;
 import com.qpark.survey.lime.model.v25.ExportResponsesResponseType;
@@ -34,7 +35,7 @@ import com.qpark.survey.lime.model.v25.RequestType;
  */
 public class RestClient {
 	/** The end point URL to call. */
-	private final String endPointUrl;
+	private String endPointUrl;
 	/** Content-type HTTP header. */
 	private final HttpHeaders headers;
 	/** The spring {@link RestTemplate}. */
@@ -47,12 +48,8 @@ public class RestClient {
 
 	/**
 	 * The REST service client implementation.
-	 *
-	 * @param endPointUrl
-	 *            the end point URL to call.
 	 */
-	public RestClient(final String endPointUrl) {
-		this.endPointUrl = endPointUrl;
+	public RestClient() {
 		this.headers = new HttpHeaders();
 		this.headers.setContentType(MediaType.APPLICATION_JSON);
 	}
@@ -61,8 +58,8 @@ public class RestClient {
 			throws JsonProcessingException {
 		final HttpEntity<String> entity = new HttpEntity<String>(
 				this.mapper.writeValueAsString(request), this.headers);
-		final String value = this.restTemplate.postForObject(this.endPointUrl,
-				entity, String.class);
+		final String value = this.restTemplate
+				.postForObject(this.getEndPointUrl(), entity, String.class);
 		return value;
 	}
 
@@ -186,7 +183,7 @@ public class RestClient {
 	 * @throws IOException
 	 */
 	public Optional<ListQuestionsResponseType> getListQuestions(
-			final LimeSurveySession session, final String surveyId)
+			final LimeSurveySession session, final int surveyId)
 			throws IOException {
 		Optional<ListQuestionsResponseType> value = Optional.empty();
 		if (Objects.isNull(session)) {
@@ -219,7 +216,7 @@ public class RestClient {
 	 * @throws IOException
 	 */
 	public Optional<ExportResponsesResponseType> getExportResponses(
-			final LimeSurveySession session, final String surveyId,
+			final LimeSurveySession session, final int surveyId,
 			final Optional<String> language) throws IOException {
 		Optional<ExportResponsesResponseType> value = Optional.empty();
 		if (Objects.isNull(session)) {
@@ -271,7 +268,7 @@ public class RestClient {
 														pt.setValue(
 																rm.get(key));
 														en.getAnswers().add(pt);
-														System.out.println(key);
+														// System.out.println(key);
 													});
 										});
 							});
@@ -303,5 +300,20 @@ public class RestClient {
 					session.getSessionKey(), session.getUserName());
 			this.executeRequst(request);
 		}
+	}
+
+	/**
+	 * @return the endPointUrl
+	 */
+	public String getEndPointUrl() {
+		return this.endPointUrl;
+	}
+
+	/**
+	 * @param endPointUrl
+	 *            the endPointUrl to set
+	 */
+	public void setEndPointUrl(final String endPointUrl) {
+		this.endPointUrl = endPointUrl;
 	}
 }
